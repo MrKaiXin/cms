@@ -11,7 +11,7 @@ class CartsCountView(APIView):
 
     def get(self, request):
         """
-        购物车商品数量统计
+        购物车商品数量统计aa
         """
         count = 0
         # 是否为登录状态
@@ -34,7 +34,6 @@ class CartsCountView(APIView):
                 for sku in carts:
                     count += sku['count']
 
-<<<<<<< HEAD
         return Response({'count': count})
 
 
@@ -75,6 +74,3 @@ class CartView(APIView):
 
         # 返回添加状态
         return Response({'message': 'OK'})
-=======
-        return Response({'count': count})
->>>>>>> 293ff25e4de86223f8530809ff1316bec33f3823
