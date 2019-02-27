@@ -40,7 +40,7 @@ class GoodsView(APIView):
 
 class GoodsListView(APIView):
 
-    # # 新增排序的过滤器
+    # 新增排序的过滤器
     # filter_backends = [OrderingFilter]
     # # 指定可以根据哪此字段进行排序
     # ordering_fields = ('create_time', 'sales', 'sell_price')
