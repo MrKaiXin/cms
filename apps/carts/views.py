@@ -80,3 +80,5 @@ class CartView(APIView):
         # 返回添加状态
         return Response({'message': 'OK'})
 
+    def get(self, request):
+        pass
