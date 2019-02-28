@@ -45,9 +45,9 @@ class CartView(APIView):
         """
         data = request.data
         try:
-            id = int(data.get('id'))
+            id = data.get('id')
             count = int(data.get('count'))
-            Goods.objects.filter(id=id)
+            Goods.objects.get(id=id)  # 如果查询不到该id的商品, 则报错
         except Exception as e:
             print(e)
             raise ValidationError('传入参数错误, 添加商品失败')
@@ -57,20 +57,26 @@ class CartView(APIView):
             user = request.user
             strict_redis = get_redis_connection('cart')  # type:StrictRedis
 
-            skus_id = strict_redis.hkeys('cart_%s' % user.id)
-            print(skus_id)
-            value = 0
-            # 获取已经存在redis中的商品的数量
-            if str(id) in skus_id:
-                value = int(strict_redis.hget('cart_%s' % user.id, id))
+            try:
+                value = int(strict_redis.hget('cart_%s' % user.id, id))  # 获取该id的商品在redis中的数量
+            except Exception as e:
+                value = 0
 
+            # 保存商品数量到redis中, 并将该商品选中
             strict_redis.hset('cart_%s' % user.id, id, count+value)
             strict_redis.sadd('cart_selected_%s' % user.id, id)
         else:  # 未登录
+            carts = request.COOKIES.get('carts')
 
-            # 获取cookie
             # 判断商品在不在cookie中,在则修改数量,不在则添加
-            pass
+            if carts:
+                if id in carts:
+                    carts[id]['count'] += count
+                else:
+                    carts[id] = {}
+                    carts[id]['count'] = count
+                carts[id]['selected'] = True
 
         # 返回添加状态
         return Response({'message': 'OK'})
+
