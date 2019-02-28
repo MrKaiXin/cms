@@ -24,6 +24,7 @@ class NewTopAPIview(APIView):
 
         image_news = NewSerializer(picture_new, many=True).data
 
+
         # 创建需要返回的
         data = {
             'slide_news': slide_news,
@@ -41,7 +42,7 @@ class CategoryNewAPIview(APIView):
         category_query = NewsCategory.objects.filter(parent_id=0).order_by('sort_id')
         # 创建序列化器对象,将数据序列化,得到字典数据
         category_list = []
-        print(category_query)
+        # print(category_query)
         # 遍历所有的一级类别
         for category in category_query:
             category_dict = NewCategorySerializer(category).data
