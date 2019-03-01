@@ -617,7 +617,32 @@ function get_cart_count() {
             }
         },
         error:function(){
-            console.log('服务器超时，请重试！');
+            console.log('购物车商品数量统计失败，请重试！');
+        }
+    });
+}
+
+function on_add() {
+    $.ajax({
+        url: host + '/cart/',
+        type: 'POST',
+        dataType: 'json',
+        contentType: "application/json; charset=utf-8",
+        xhrFields: {
+            withCredentials: true
+        },
+        data: JSON.stringify({
+
+            id: parseInt(get_query_string('id')),
+            count: parseInt($('#commoditySelectNum').val())
+        }),
+        crossDomain: true,
+        success:function(dat){
+            console.log(dat.message)
+            get_cart_count()
+        },
+        error:function(){
+            console.log('购物车添加商品失败，请重试！');
         }
     });
 }

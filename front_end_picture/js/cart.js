@@ -1,4 +1,4 @@
-﻿var vm1 = new Vue({
+﻿var vm = new Vue({
     el: '#app',
     data: {
         host: 'http://127.0.0.1:8000',
@@ -68,7 +68,8 @@
         on_add: function(index) {
             let goods = this.goods_list[index];
             let count = parseInt(goods.count) + 1;
-
+            console.log(goods);
+            console.log(count);
             this.update_cart_count(goods.id, count, index);
         },
 
