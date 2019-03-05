@@ -101,7 +101,7 @@
                                             <input id="commodityArticleId" type="hidden" value="88"/>
                                             <input id="commodityGoodsId" type="hidden" value="0"/>
                                             <input id="commoditySelectNum" type="text" maxlength="9" v-model="count"
-                                                   maxValue="198" onkeydown="return checkNumber(event);"/>
+                                                   maxValue="198" @keydown.enter="$event.currentTarget.blur();"/>
                                             <a class="add" @click="on_increment">+</a>
                                             <a class="remove" @click="on_decrement">-</a>
                                         </div>

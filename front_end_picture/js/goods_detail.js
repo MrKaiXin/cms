@@ -54,17 +54,17 @@ var vm = new Vue({
         //     }
         // },
         //
-        // on_increment: function(){
-        //     // 点击增加购买数量
-        //     this.count ++
-        // },
+        on_increment: function(){
+            // 点击增加购买数量
+            this.count ++
+        },
         //
-        // on_decrement: function(){
-        //     // 点击减少购买数量
-        //     if (this.count > 1) {
-        //         this.count--;
-        //     }
-        // },
+        on_decrement: function(){
+            // 点击减少购买数量
+            if (this.count > 1) {
+                this.count--;
+            }
+        },
     },
 
     filters: {

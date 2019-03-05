@@ -7,7 +7,7 @@ var vm = new Vue({
 
     mounted: function () {
         this.get_recommend_goods();
-        this.get_category_goods();
+        // this.get_category_goods();
     },
 
     methods: {

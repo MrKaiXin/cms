@@ -75,7 +75,39 @@
                             <th width="54" align="center">操作</th>
                         </tr>
 
-                        <!-- 第1条数据 -->
+                        <tr v-for="(goods, index) in goods_list">
+                            <td align="center">
+                                <input type="checkbox" class="check_all" v-model="goods.selected" @click="on_selected(index)"/>
+                            </td>
+                            <td width="68">
+                                <a target="_blank" href="/goods/show-89.html">
+                                    <img :src="goods.img_url" class="img"/>
+                                </a>
+                            </td>
+                            <td>
+                                <a target="_blank" href="/goods/show-89.html">{{ goods.title }}</a>
+                            </td>
+                            <td>
+                                ￥{{ goods.sell_price }}
+                            </td>
+                            <td align="center">
+                                <div class="buy-box">
+                                    <a href="javascript:;" class="reduce" @click="on_minus(index)">-</a>
+                                    <input type="text" name="goodsQuantity" class="input" v-model="goods.count"
+                                           @keydown.enter="on_input($event, index)"/>
+                                    <a href="javascript:;" class="subjoin" @click="on_add(index)">+</a>
+                                </div>
+                            </td>
+                            <td>
+                            <span class="red">
+                                ￥<label name="amountCount">{{ goods.amount }}</label>
+                            </span>
+                            </td>
+                            <td align="center">
+                                <a @click="delete_goods(index)" href="javascript:;">删除</a>
+                            </td>
+                        </tr>
+                        <!-- 第1条数据
                         <tr>
                             <td align="center">
                             </td>
@@ -106,7 +138,7 @@
                             <td align="center">
                                 <a onclick="" href="javascript:;">删除</a>
                             </td>
-                        </tr>
+                        </tr>-->
 
                         <tr>
                             <td colspan="10" style="display: none">
@@ -122,13 +154,14 @@
 
                         <tr class="table-footer">
                             <th align="left" colspan="3">
-                                <input type="checkbox" class="check_all"/>
+                                <input type="checkbox" class="check_all" :checked="select_all" @click="on_select_all"/>
                                 <label>全选</label>
+                                &nbsp;&nbsp;&nbsp;<a style="color: #555" href="javascript:;" @click="clearCart">清空购物车</a>
                             </th>
                             <th align="right" colspan="8">
-                                已选择商品 <b class="red" id="totalQuantity">0</b> 件 &nbsp;&nbsp;&nbsp;
+                                已选择商品 <b class="red" id="totalQuantity">{{ selected_count }}</b> 件 &nbsp;&nbsp;&nbsp;
                                 商品总金额（不含运费）：<span class="red">￥</span>
-                                <b class="red" id="totalAmount">0.0</b>元
+                                <b class="red" id="totalAmount">{{ selected_amount }}</b>元
                             </th>
                         </tr>
 
@@ -141,6 +174,7 @@
                     <div class="left-box">
                     </div>
                     <div class="right-box">
+                        <button class="button" onclick="javascript:location.href='/goods.html';">继续购物</button>
                         <button class="submit">立即结算</button>
                     </div>
                 </div>

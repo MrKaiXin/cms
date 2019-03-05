@@ -609,7 +609,6 @@ function get_cart_count() {
         },
         crossDomain: true,
         success:function(dat){
-            console.log(dat.count);
             if (dat.count > 0){
                 $('#cart_count').html('购物车(' + dat.count + ')')
             }else{
@@ -638,7 +637,7 @@ function on_add() {
         }),
         crossDomain: true,
         success:function(dat){
-            console.log(dat.message)
+            $('#commoditySelectNum').val(1);
             get_cart_count()
         },
         error:function(){

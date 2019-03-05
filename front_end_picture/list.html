@@ -29,7 +29,7 @@
             <a href="goods.html">购物商城</a>
 
             <!-- 面包屑导航 -->
-            <template v-if="category.parent !== null">
+            <template v-if="category && category.parent">
                 &nbsp;&gt;&nbsp;<a :href="'list.html?category=' + category.parent.id">{{ category.parent.title }}</a>&nbsp;&gt;&nbsp;
                 <a :href="'list.html?category=' + category.id">{{ category.title }}</a>
             </template>
