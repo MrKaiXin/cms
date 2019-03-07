@@ -202,7 +202,6 @@ class CartView(APIView):
                     raise ValidationError('COOKIES错误, 购物车修改商品失败')
                 carts[id]['count'] = count
                 carts[id]['selected'] = selected
-                print(carts)
                 response.set_cookie('carts', base64.b64encode(pickle.dumps(carts)).decode(), constants.CART_COOKIE_EXPIRES)
 
         return response
@@ -242,7 +241,6 @@ class CartView(APIView):
                     print('COOKIES错误', e)
                     raise ValidationError('COOKIES错误, 购物车删除商品失败')
                 del carts[id]
-                print(carts)
                 response.set_cookie('carts', base64.b64encode(pickle.dumps(carts)).decode(), constants.CART_COOKIE_EXPIRES)
 
         return response
@@ -312,10 +310,10 @@ class CartClearView(APIView):
                 raise ValidationError('redis数据库操作失败, 购物车清空商品失败')
 
         else:  # 未登录
-            carts = request.COOKIES.get('carts')
+            carts = {}
 
             # 清空购物车
-            if carts:
-                response.delete_cookie('carts')
+            response.set_cookie('carts', base64.b64encode(pickle.dumps(carts)).decode(),
+                                constants.CART_COOKIE_EXPIRES)
 
         return response

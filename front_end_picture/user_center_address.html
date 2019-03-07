@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>我的积分 - DTcms网站管理系统</title>
-    <link rel="stylesheet" type="text/css" href="js/ui-dialog.css"/>
+    <link rel="stylesheet" type="text/css" href="scripts/artdialog/ui-dialog.css"/>
     <link rel="stylesheet" type="text/css" href="css/style.css"/>
     <script type="text/javascript" src="js/jquery-1.11.2.min.js"></script>
     <script type="text/javascript" src="scripts/artdialog/dialog-plus-min.js"></script>
@@ -13,7 +13,7 @@
         // 用户未登录,则中转到登录界面
         let token = sessionStorage.token || localStorage.token;
         if (!token) {
-            // location.href = '/login.html';
+            location.href = '/login.html';
         }
     </script>
 
@@ -37,7 +37,7 @@
 </div>
 <!--/当前位置-->
 
-<div class="section clearfix">
+<div class="section clearfix" id="app">
     <!--页面左边-->
     <div class="left-260">
         <div class="bg-wrap">
@@ -46,7 +46,7 @@
                     <i class="iconfont icon-user-full"></i>
                 </a>
                 <h3>
-                    django
+                    {{ username }}
                 </h3>
                 <p><b>注册会员</b></p>
             </div>
@@ -60,6 +60,15 @@
                         </h2>
                         <div class="list">
                             <p><a href="user_center_address.html"><i class="iconfont icon-arrow-right"></i>地址列表</a></p>
+                        </div>
+                    </li>
+                    <li>
+                        <h2>
+                            <i class="iconfont icon-user"></i>
+                            <span>账户管理</span>
+                        </h2>
+                        <div class="list">
+                            <p><a href="user_center_avatar.html"><i class="iconfont icon-arrow-right"></i>头像设置</a></p>
                         </div>
                     </li>
                 </ul>
@@ -92,21 +101,22 @@
                         <td width="50"><b>操作</b></td>
                     </tr>
 
-                    <tr>
+                    <tr v-for="(address, index) in addresses">
                         <td >
-                            <input type="radio" :value="address.id" v-model="default_address_id"/>
+                            <input type="radio" :value="address.id" v-model="default_address_id" @click="set_default(index)"/>
                         </td>
-                        <td>张三</td>
-                        <td>广东省 广州市 天河区 </td>
-                        <td>珠吉路津安创意园xx号</td>
-                        <td>13609000000</td>
-                        <td>5599921</td>
-                        <td>511500</td>
+                        <td>{{ address.receiver }}</td>
+                        <td>{{ address.province }} {{ address.city }}
+				{{ address.district }}</td>
+                        <td>{{ address.place }}</td>
+                        <td>{{ address.mobile }}</td>
+                        <td>{{ address.tel }}</td>
+                        <td>{{ address.email }}</td>
                         <td width="35">
-                            <a href="javascript:;">删除</a>
+                            <a href="javascript:;" @click="delete_address(index)">删除</a>
                         </td>
                     </tr>
-                    <tr>
+                    <!-- <tr>
                         <td >
                             <input type="radio" :value="address.id" v-model="default_address_id"/>
                         </td>
@@ -119,7 +129,7 @@
                         <td width="35">
                             <a href="javascript:;">删除</a>
                         </td>
-                    </tr>
+                    </tr> -->
 
                     </tbody>
                 </table>
@@ -131,7 +141,7 @@
                 </div>
             </div>
             <!--/积分明细-->
-
+        </div>
     </div>
     <!--/页面右边-->
 </div>
@@ -142,5 +152,8 @@
 <script>$("#footer").load("_footer.html");</script>
 <!--/页面底部-->
 
+<script type="text/javascript" src="js/axios-0.18.0.min.js"></script>
+<script type="text/javascript" src="js/vue-2.5.16.js"></script>
+<script type="text/javascript" src="js/user_center_address.js"></script>
 </body>
 </html>

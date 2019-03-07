@@ -2,6 +2,7 @@
     el: '#app',
     data: {
         host,
+        token: sessionStorage.token || localStorage.token,
         goods_list: [],         // 购物车中的商品
     },
 
@@ -55,12 +56,13 @@
             //发送请求
             if (this.goods_list.length) {
                 let config = {
-                    /*
-                     headers: { // 通过请求头往服务器传递登录状态
-                     'Authorization': 'JWT ' + this.token
-                     },*/
-                    withCredentials: true   // 注意： 跨域请求传递cookie给服务器
+                    withCredentials: true  // 跨域传递cookie给服务器
                 };
+                if(this.token){
+                    config.headers = {  // 传递登录状态jwt
+                        'Authorization': 'JWT ' + this.token
+                    }
+                }
                 axios.put(this.host + '/cart/seletions/', {
                     'selected': select
                 }, config)
@@ -77,15 +79,15 @@
 
         // 获取购物车商品数据
         get_cart_goods: function () {
-
-            //发送请求
             let config = {
-                /*
-                headers: { // 通过请求头往服务器传递登录状态
-                    'Authorization': 'JWT ' + this.token
-                },*/
-                withCredentials: true   // 注意： 跨域请求传递cookie给服务器
+                withCredentials: true  // 跨域传递cookie给服务器
             };
+            if(this.token){
+                config.headers = {  // 传递登录状态jwt
+                    'Authorization': 'JWT ' + this.token
+                }
+            }
+            //发送请求
             axios.get(this.host + '/cart/', config)
                 .then(response => {
                     this.goods_list = response.data;
@@ -134,12 +136,13 @@
         update_cart_count: function(goods_id, goods_count, goods_selected, index) {
             //发送请求
             let config = {
-                /*
-                headers: { // 通过请求头往服务器传递登录状态
-                    'Authorization': 'JWT ' + this.token
-                },*/
-                withCredentials: true   // 注意： 跨域请求传递cookie给服务器
+                withCredentials: true  // 跨域传递cookie给服务器
             };
+            if(this.token){
+                config.headers = {  // 传递登录状态jwt
+                    'Authorization': 'JWT ' + this.token
+                }
+            }
             axios.put(this.host + '/cart/', {
                 'id':goods_id,
                 'count': goods_count,
@@ -161,15 +164,16 @@
             //发送请求
             id = this.goods_list[index].id;
             let config = {
-                /*
-                headers: { // 通过请求头往服务器传递登录状态
-                    'Authorization': 'JWT ' + this.token
-                },*/
                 data: {
                     'id': id
                 },
-                withCredentials: true   // 注意： 跨域请求传递cookie给服务器
+                withCredentials: true  // 跨域传递cookie给服务器
             };
+            if(this.token){
+                config.headers = {  // 传递登录状态jwt
+                    'Authorization': 'JWT ' + this.token
+                }
+            }
             axios.delete(this.host + '/cart/', config)
                 .then(response => {
                     this.goods_list.splice(index, 1);
@@ -186,12 +190,13 @@
             if (this.goods_list.length) {
                 //发送请求
                 let config = {
-                    /*
-                    headers: { // 通过请求头往服务器传递登录状态
-                        'Authorization': 'JWT ' + this.token
-                    },*/
-                    withCredentials: true   // 注意： 跨域请求传递cookie给服务器
+                    withCredentials: true  // 跨域传递cookie给服务器
                 };
+                if(this.token){
+                    config.headers = {  // 传递登录状态jwt
+                        'Authorization': 'JWT ' + this.token
+                    }
+                }
                 axios.delete(this.host + '/carts/', config)
                     .then(response => {
                         this.goods_list = [];

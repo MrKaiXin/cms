@@ -1,5 +1,4 @@
 ﻿<!--页面头部-->
-
 <div class="header">
     <div class="head-top">
         <div class="section">
@@ -10,15 +9,35 @@
             </div>
 
             <div id="menu" class="right-box">
-
-                <!-- 已经登录时显示
-                <a href="user_center_address.html">张三</a><strong>|</strong>
-                <a href="exit.html">退出</a>
-                -->
-
-                <a href="register.html">注册</a><strong>|</strong>
-                <a href="login.html">登录</a>
-                <script>get_cart_count()</script>
+                <!-- 已经登录时显示-->
+                <div id="login">
+                    <a href="user_center_address.html" id="username"></a><strong>|</strong>
+                    <script>
+                        $('#username').html(sessionStorage.username || localStorage.username)
+                    </script>
+                    <a href="javascript:;" id="exit">退出</a>
+                    <script>
+                        $('#exit').click(function () {
+                            sessionStorage.clear();
+                            localStorage.clear();
+                            location.href = '/index.html';
+                        })
+                    </script>
+                </div>
+                <div id="unlogin">
+                    <a href="register.html">注册</a><strong>|</strong>
+                    <a href="login.html">登录</a>
+                </div>
+                <script>
+                    get_cart_count()
+                    if(sessionStorage.token || localStorage.token) {
+                        $('#login').show();
+                        $('#unlogin').hide();
+                    } else {
+                        $('#login').hide();
+                        $('#unlogin').show();
+                    }
+                </script>
                 <a href="cart.html" id="cart_count">购物车</a>
                 <a href="">联系我们</a>
             </div>
@@ -40,5 +59,16 @@
         </div>
     </div>
 </div>
-<!--/页面头部-->
-
+<!--/页面头部
+<script type="text/javascript" src="js/vue-2.5.16.js"></script>
+<script>
+    new Vue({
+        el: '#menu',
+        data: {
+            token: sessionStorage.token || localStorage.token,
+            username: sessionStorage.username || localStorage.username
+        },
+        methods: {}
+    })
+</script>
+-->

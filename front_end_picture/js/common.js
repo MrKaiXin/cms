@@ -600,48 +600,107 @@ function get_query_string(name) {
 }
 
 function get_cart_count() {
-    $.ajax({
-        url: host + '/carts/count/',
-        type: 'GET',
-        dataType: 'json',
-        xhrFields: {
-            withCredentials: true
-        },
-        crossDomain: true,
-        success:function(dat){
-            if (dat.count > 0){
-                $('#cart_count').html('购物车(' + dat.count + ')')
-            }else{
-                $('#cart_count').html('购物车')
+    let token = sessionStorage.token || localStorage.token;
+
+    if(token) {
+        $.ajax({
+            url: host + '/carts/count/',
+            type: 'GET',
+            dataType: 'json',
+            headers: {
+                'Authorization': 'JWT ' + token,
+            },
+            xhrFields: {
+                withCredentials: true  // 跨域传递cookie给服务器
+            },
+            crossDomain: true,
+            success:function(dat){
+                if (dat.count > 0){
+                    $('#cart_count').html('购物车(' + dat.count + ')')
+                }else{
+                    $('#cart_count').html('购物车')
+                }
+            },
+            error:function(){
+                console.log('购物车商品数量统计失败，请重试！');
             }
-        },
-        error:function(){
-            console.log('购物车商品数量统计失败，请重试！');
-        }
-    });
+        });
+    } else {
+        $.ajax({
+            url: host + '/carts/count/',
+            type: 'GET',
+            dataType: 'json',
+            xhrFields: {
+                withCredentials: true  // 跨域传递cookie给服务器
+            },
+            crossDomain: true,
+            success:function(dat){
+                if (dat.count > 0){
+                    $('#cart_count').html('购物车(' + dat.count + ')')
+                }else{
+                    $('#cart_count').html('购物车')
+                }
+            },
+            error:function(){
+                console.log('购物车商品数量统计失败，请重试！');
+            }
+        });
+    }
 }
 
 function on_add() {
-    $.ajax({
-        url: host + '/cart/',
-        type: 'POST',
-        dataType: 'json',
-        contentType: "application/json; charset=utf-8",
-        xhrFields: {
-            withCredentials: true
-        },
-        data: JSON.stringify({
+    let token=sessionStorage.token || localStorage.token;
+    if(token){
+        $.ajax({
+            url: host + '/cart/',
+            type: 'POST',
+            dataType: 'json',
+            contentType: "application/json; charset=utf-8",
+            headers: {
+                'Authorization': 'JWT ' + token,
+            },
+            xhrFields: {
+                withCredentials: true  // 跨域传递cookie给服务器
+            },
+            data: JSON.stringify({
 
-            id: parseInt(get_query_string('id')),
-            count: parseInt($('#commoditySelectNum').val())
-        }),
-        crossDomain: true,
-        success:function(dat){
-            $('#commoditySelectNum').val(1);
-            get_cart_count()
-        },
-        error:function(){
-            console.log('购物车添加商品失败，请重试！');
-        }
-    });
+                id: parseInt(get_query_string('id')),
+                count: parseInt($('#commoditySelectNum').val())
+            }),
+            crossDomain: true,
+            success:function(dat){
+                $('#commoditySelectNum').val(1);
+                get_cart_count();
+                alert('成功添加商品');
+            },
+            error:function(){
+                console.log('购物车添加商品失败，请重试！');
+            }
+        });
+    } else {
+        $.ajax({
+            url: host + '/cart/',
+            type: 'POST',
+            dataType: 'json',
+            contentType: "application/json; charset=utf-8",
+            xhrFields: {
+                withCredentials: true  // 跨域传递cookie给服务器
+            },
+            data: JSON.stringify({
+
+                id: parseInt(get_query_string('id')),
+                count: parseInt($('#commoditySelectNum').val())
+            }),
+            crossDomain: true,
+            success:function(dat){
+                $('#commoditySelectNum').val(1);
+                get_cart_count();
+                alert('成功添加商品');
+            },
+            error:function(){
+                console.log('购物车添加商品失败，请重试！');
+            }
+        });
+    }
+
 }

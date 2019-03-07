@@ -1,5 +1,3 @@
-from django.db import models
-
 # Create your models here.
 from django.contrib.auth.models import AbstractUser
 from django.db import models
@@ -9,13 +7,25 @@ from utils.models import BaseModel
 
 class User(AbstractUser):
     """用户模型类"""
+    GENDER_CHOICES = (
+        (True, '男'),
+        (False, '女'),
+        (None, '保密')
+    )
+
     mobile = models.CharField(max_length=11, verbose_name='手机号')
     # mobile = models.CharField(max_length=11, unique=True, verbose_name='手机号')
+    nick_name = models.CharField(null=True, blank=True, max_length=20, verbose_name='昵称')
+    gender = models.NullBooleanField(default=None, choices=GENDER_CHOICES, verbose_name='性别')
+    birthday = models.DateField(null=True, blank=True, verbose_name='生日')
+    phone = models.CharField(null=True, blank=True, max_length=11, verbose_name='电话号码')
+    email_active = models.BooleanField(default=False, verbose_name='邮箱验证状态')
     # 用户的默认地址,可以为空,
     default_address = models.ForeignKey('Address', related_name='users',
                                         null=True, blank=True,
                                         on_delete=models.SET_NULL,
                                         verbose_name='默认地址')
+    avatar_url = models.CharField(null=True, blank=True, max_length=255, verbose_name='头像url')
 
     class Meta:
         db_table = 't_user'

@@ -16,6 +16,8 @@ import os
 import sys
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+import datetime
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
@@ -26,9 +28,9 @@ sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 SECRET_KEY = '9fscrp!vhn2=na!exp2qeai&2ixtw)sw0z)=@b*8ozy+(pt4=3'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1']
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -36,9 +38,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'corsheaders',  # 注册解决跨域请求的包
     'rest_framework',  # 注册rest框架
+    'xadmin',
+    'crispy_forms',
+    'reversion',
+
     'users',  # 注册用户应用
+    'verifications',  # 注册校验应用
+    'areas',
     'carts',  # 注册购物车应用
     'goods',  # 注册商品应用
     'news',  # 注册新闻应用
@@ -50,6 +59,7 @@ INSTALLED_APPS = [
 AUTH_USER_MODEL = 'users.User'
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',  # 用来解决跨域请求
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -57,7 +67,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',  # 用来解决跨域请求
+
 ]
 
 ROOT_URLCONF = 'cms.urls'
@@ -173,8 +183,42 @@ CACHES = {
     }
 }
 
+# 配置session保存到redis中
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "session"
+
+REST_FRAMEWORK = {
+
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '100/day'
+    },
+}
+
 # 添加白名单
 CORS_ORIGIN_WHITELIST = (
     '127.0.0.1:8080',
 )
 CORS_ALLOW_CREDENTIALS = True  # 指明在跨域访问中，后端是否支持对cookie的操作
+
+JWT_AUTH = {
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),  	# jwt有效时间
+    'JWT_RESPONSE_PAYLOAD_HANDLER': 'users.utils.jwt_response_payload_handler'
+}
+
+AUTHENTICATION_BACKENDS = ['users.utils.UsernameMobileEmailAuthBackend', ]
+
+# DEFAULT_FILE_STORAGE = 'utils.image_storage.AvatarStorage'
+
+REST_FRAMEWORK_EXTENSIONS = {
+    # 缓存时间(1小时)
+    'DEFAULT_CACHE_RESPONSE_TIMEOUT': 60 * 60,
+    # 缓存到哪里 (caches中配置的default)
+    'DEFAULT_USE_CACHE': 'default',
+}
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'front_end_picture/static/')

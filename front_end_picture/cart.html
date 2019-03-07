@@ -94,7 +94,7 @@
                                 <div class="buy-box">
                                     <a href="javascript:;" class="reduce" @click="on_minus(index)">-</a>
                                     <input type="text" name="goodsQuantity" class="input" v-model="goods.count"
-                                           @keydown.enter="on_input($event, index)"/>
+                                           @keydown.enter="on_input($event, index)" @blur="on_input($event, index)"/>
                                     <a href="javascript:;" class="subjoin" @click="on_add(index)">+</a>
                                 </div>
                             </td>

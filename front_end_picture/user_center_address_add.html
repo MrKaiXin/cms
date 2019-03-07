@@ -3,13 +3,14 @@
 <head>
     <meta charset="utf-8">
     <title>我的积分 - DTcms网站管理系统</title>
-    <link rel="stylesheet" type="text/css" href="js/ui-dialog.css"/>
+    <link rel="stylesheet" type="text/css" href="scripts/artdialog/ui-dialog.css"/>
     <link rel="stylesheet" type="text/css" href="css/style.css"/>
     <script type="text/javascript" charset="utf-8" src="js/jquery-1.11.2.min.js"></script>
     <script type="text/javascript" charset="utf-8" src="scripts/artdialog/dialog-plus-min.js"></script>
     <script type="text/javascript" charset="utf-8" src="js/common.js"></script>
 
     <script>
+
         // 用户未登录,则中转到登录界面
         let token = sessionStorage.token || localStorage.token;
         if (!token) {
@@ -37,7 +38,7 @@
 </div>
 <!--/当前位置-->
 
-<div class="section clearfix">
+<div class="section clearfix" id="app">
     <!--页面左边-->
     <div class="left-260">
         <div class="bg-wrap">
@@ -46,7 +47,7 @@
                     <i class="iconfont icon-user-full"></i>
                 </a>
                 <h3>
-                    django
+                    {{ username }}
                 </h3>
                 <p><b>注册会员</b></p>
             </div>
@@ -60,7 +61,15 @@
                         </h2>
                         <div class="list">
                             <p><a href="user_center_address.html"><i class="iconfont icon-arrow-right"></i>地址列表</a></p>
-                            </p>
+                        </div>
+                    </li>
+                    <li>
+                        <h2>
+                            <i class="iconfont icon-user"></i>
+                            <span>账户管理</span>
+                        </h2>
+                        <div class="list">
+                            <p><a href="user_center_avatar.html"><i class="iconfont icon-arrow-right"></i>头像设置</a></p>
                         </div>
                     </li>
                 </ul>
@@ -71,7 +80,7 @@
     <!--/页面左边-->
 
     <!--页面右边-->
-    <div class="right-auto">
+    <div class="right-auto" >
         <div class="bg-wrap" style="min-height:765px;">
             <div class="sub-tit">
                 <a class="add" href="javascript:history.go(-1);">
@@ -85,27 +94,35 @@
                     <dd>
                         <input name="book_id" id="book_id" type="hidden" value="0"/>
                         <input name="accept_name" id="accept_name" type="text" class="input" value="" datatype="s2-20"
-                               sucmsg=" "/>
+                               sucmsg=" "　@click="error_receiver=false;" @blur="check_receiver" v-model="form_address.receiver"/>
                     </dd>
                 </dl>
                 <dl class="form-group">
                     <dt>*所属地区：</dt>
                     <dd>
-                        <select id="province" name="province" class="select" style="width: 100px"></select>
-                        <select id="city" name="city" class="select" style="width: 100px"></select>
-                        <select id="area" name="area" class="select" datatype="*" style="width: 100px"></select>
+                        <select id="province" name="province" class="select" style="width: 100px" v-model="form_address.province_id">
+                            <option v-for="province in provinces" v-bind:value="province.id">
+		{{ province.name }}</option>
+                        </select>
+                        <select id="city" name="city" class="select" style="width: 100px"v-model="form_address.city_id">
+                            <option v-for="city in cities" v-bind:value="city.id">{{ city.name }}</option>
+                        </select>
+                        <select id="area" name="area" class="select" datatype="*" style="width: 100px" v-model="form_address.district_id">
+                            <option v-for="district in districts" v-bind:value="district.id">
+		{{ district.name }}</option>
+                        </select>
                     </dd>
                 </dl>
                 <dl class="form-group">
                     <dt>*详细地址：</dt>
                     <dd>
-                        <input name="address" id="address" type="text" class="input" value="" />
+                        <input name="address" id="address" type="text" class="input" value="" @click="error_place=false;" @blur="check_place" v-model="form_address.place"/>
                     </dd>
                 </dl>
                 <dl class="form-group">
                     <dt>*手机号码：</dt>
                     <dd>
-                        <input name="mobile" id="mobile" type="text" class="input" value="" />
+                        <input name="mobile" id="mobile" type="text" class="input" value="" @click="error_mobile=false;" @blur="check_mobile" v-model="form_address.mobile"/>
                     </dd>
                 </dl>
                 <dl class="form-group">
@@ -117,13 +134,13 @@
                 <dl class="form-group">
                     <dt>电子邮箱：</dt>
                     <dd>
-                        <input name="email" id="email" type="text" class="input" value=""/>
+                        <input name="email" id="email" type="text" class="input" value="" @click="error_email=false;" @blur="check_email" v-model="form_address.email"/>
                     </dd>
                 </dl>
 
                 <div class="page-foot" style="margin-left: 50px; margin-top: 20px;">
                     <div class="btn-box">
-                        <a href="">保存地址</a>
+                        <a href="javascript:;" @click="save_address">保存地址</a>
                     </div>
                 </div>
 
@@ -137,6 +154,8 @@
 <div id="footer"></div>
 <script>$("#footer").load("_footer.html");</script>
 <!--/页面底部-->
-
+<script type="text/javascript" src="js/axios-0.18.0.min.js"></script>
+<script type="text/javascript" src="js/vue-2.5.16.js"></script>
+<script type="text/javascript" src="js/user_center_address_add.js"></script>
 </body>
 </html>
